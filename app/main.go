@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/hyperledger/fabric-sdk-go-cncc/cli"
+	"log"
 )
 
 const (
@@ -24,29 +25,29 @@ func main() {
 
 func Phase(cli1 *cli.Client) {
 	
-	//log.Println("=================== Phase 1 begin ===================")
-	//defer log.Println("=================== Phase 1 end ===================")
-	//
-	//if err := cli1.InstallCC("v1", peer0Org1); err != nil {
-	//	log.Panicf("Intall chaincode error: %v", err)
-	//}
-	//log.Println("Chaincode has been installed on org1's peers")
-	//
-	//// InstantiateCC chaincode only need once for each channel
-	//if _, err := cli1.InstantiateCC("v1", peer0Org1); err != nil {
-	//	log.Panicf("Instantiated chaincode error: %v", err)
-	//}
-	//log.Println("Chaincode has been instantiated")
-	//
-	////if _, err := cli1.InvokeCC([]string{peer0Org1,peer1Org1,peer0Org2,peer1Org2}); err != nil {
-	//if _, err := cli1.InvokeCC([]string{peer0Org1}); err != nil {
-	//	log.Panicf("Invoke chaincode error: %v", err)
-	//}
-	//log.Println("Invoke chaincode success")
-	//
-	//if err := cli1.QueryCC("peer0.org1.example.com", "a"); err != nil {
-	//	log.Panicf("Query chaincode error: %v", err)
-	//}
-	//log.Println("Query chaincode success on peer0.org1")
-	cli1.GetChannelConfig("","")
+	log.Println("=================== Phase 1 begin ===================")
+	defer log.Println("=================== Phase 1 end ===================")
+
+	if err := cli1.InstallCC("v1", peer0Org1); err != nil {
+		log.Panicf("Intall chaincode error: %v", err)
+	}
+	log.Println("Chaincode has been installed on org1's peers")
+
+	// InstantiateCC chaincode only need once for each channel
+	if _, err := cli1.InstantiateCC("v1", peer0Org1); err != nil {
+		log.Panicf("Instantiated chaincode error: %v", err)
+	}
+	log.Println("Chaincode has been instantiated")
+
+	//if _, err := cli1.InvokeCC([]string{peer0Org1,peer1Org1,peer0Org2,peer1Org2}); err != nil {
+	if _, err := cli1.InvokeCC([]string{peer0Org1}); err != nil {
+		log.Panicf("Invoke chaincode error: %v", err)
+	}
+	log.Println("Invoke chaincode success")
+
+	if err := cli1.QueryCC("peer0.org1.example.com", "a"); err != nil {
+		log.Panicf("Query chaincode error: %v", err)
+	}
+	log.Println("Query chaincode success on peer0.org1")
+	//cli1.GetChannelConfig("","")
 }
