@@ -39,7 +39,7 @@ func New(cfg, org, admin, user string) *Client {
 		OrgUser:    user,
 
 		CCID:      "example2",
-		CCPath:    "github.com/hyperledger/fabric-samples/chaincode/chaincode_example02/go/", // 相对路径是从GOPAHT/src开始的
+		CCPath:    "github.com/hyperledger/fabric-samples-gm/chaincode/chaincode_example02/go/", // 相对路径是从GOPAHT/src开始的
 		CCGoPath:  os.Getenv("GOPATH"),
 		ChannelID: "mychannel",
 	}
@@ -84,7 +84,7 @@ func NewSdkClient(sdk *fabsdk.FabricSDK, channelID, orgName, orgAdmin, OrgUser s
 func (c *Client) RegisterChaincodeEvent(ccid, eventName string) (fab.Registration, <-chan *fab.CCEvent, error) {
 	return c.cc.RegisterChaincodeEvent(ccid, eventName)
 }
-func (c *Client)GetChannelConfig(v string, peer string) {
+func (c *Client) GetChannelConfig(v string, peer string) {
 	org1ChannelContext := c.SDK.ChannelContext(c.ChannelID, fabsdk.WithUser(c.OrgAdmin), fabsdk.WithOrg(c.OrgName))
 	channelCtx, err := org1ChannelContext()
 	if err != nil {
@@ -92,14 +92,14 @@ func (c *Client)GetChannelConfig(v string, peer string) {
 	}
 	//orderers := channelCtx.EndpointConfig().ChannelOrderers(c.ChannelID)
 	//orderer, err := channelCtx.InfraProvider().CreateOrdererFromConfig(&orderers[0])
-	
+
 	cs := channelCtx.ChannelService()
 	cfg, err := cs.Config()
-	
+
 	if err != nil {
 		log.Fatalf("Failed to create new channel config: %s", err)
 	}
-	
+
 	queryChannelCfg(channelCtx, cfg)
 }
 func queryChannelCfg(channelCtx contextAPI.Channel, cfg fab.ChannelConfig) {

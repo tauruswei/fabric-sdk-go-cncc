@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	cfgPath = "/opt/go/src/github.com/hyperledger/fabric-sdk-go-cncc/config/config.yaml"
+	cfgPath = "config/config.yaml"
 )
 
 var (
@@ -17,14 +17,14 @@ var (
 )
 
 func main() {
-	org1Client := cli.New(cfgPath, "Org1", "Admin", "User1")
+	org1Client := cli.New(cfgPath, "Org1", "Admin", "Admin")
 	defer org1Client.Close()
 	// Install, instantiate, invoke, query
 	Phase(org1Client)
 }
 
 func Phase(cli1 *cli.Client) {
-	
+
 	log.Println("=================== Phase 1 begin ===================")
 	defer log.Println("=================== Phase 1 end ===================")
 
