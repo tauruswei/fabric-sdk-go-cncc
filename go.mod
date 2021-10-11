@@ -18,9 +18,9 @@ replace github.com/hyperledger/fabric v2.1.1+incompatible => github.com/hyperled
 
 replace github.com/golang/protobuf v1.5.2 => github.com/golang/protobuf v1.3.3
 
-replace google.golang.org/genproto v0.0.0-20200707001353-8e8330bf89df => google.golang.org/genproto v0.0.0-20180125080656-4eb30f4778ee
+replace google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a => google.golang.org/genproto v0.0.0-20180125080656-4eb30f4778ee
 
-replace google.golang.org/grpc v1.37.0 => google.golang.org/grpc v1.11.3
+replace google.golang.org/grpc v1.40.0 => google.golang.org/grpc v1.11.3
 
 require (
 	github.com/Shopify/sarama v1.27.0 // indirect
