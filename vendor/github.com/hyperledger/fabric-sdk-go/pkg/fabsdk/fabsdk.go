@@ -249,6 +249,7 @@ func initSDK(sdk *FabricSDK, configProvider core.ConfigProvider, opts []Option) 
 	}
 
 	// Initialize rand (TODO: should probably be optional)
+	// 设置随机数种子，保证每次运行sdk时，产生的随机数都是随机的
 	rand.Seed(time.Now().UnixNano())
 
 	// Initialize state store
@@ -436,6 +437,7 @@ func (sdk *FabricSDK) loadConfigs(configProvider core.ConfigProvider) (*configs,
 	}
 
 	//Initialize cryptosuite once crypto Suite config is available
+	// 初始化 sdk 的 cryptosuite
 	err = sdk.initializeCryptoSuite(c.cryptoSuiteConfig)
 	if err != nil {
 		return nil, errors.WithMessage(err, "unable to initialize cryptosuite using crypto suite config")

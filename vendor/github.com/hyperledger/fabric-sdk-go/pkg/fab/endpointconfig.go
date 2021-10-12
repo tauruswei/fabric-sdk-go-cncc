@@ -1120,6 +1120,7 @@ func (c *EndpointConfig) loadAllTLSConfig(configEntity *endpointConfigEntity) er
 	}
 
 	//resolve path and load bytes
+	// 加载 peer 节点或者 orderer 节点的 tls ca 证书
 	err = c.loadOrdererPeerTLSConfig(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load orderer/peer TLSConfig ")
