@@ -446,6 +446,7 @@ func (c *EndpointConfig) loadEndpointConfiguration() error {
 func (c *EndpointConfig) loadEndpointConfigEntities(configEntity *endpointConfigEntity) error {
 
 	//Compile the entityMatchers
+	// 目前没有用到
 	matchError := c.compileMatchers()
 	if matchError != nil {
 		return matchError
@@ -458,47 +459,57 @@ func (c *EndpointConfig) loadEndpointConfigEntities(configEntity *endpointConfig
 	}
 
 	//load default configs
+	// 加载peer 、orderer、channel policies 的默认配置
+	// 赋值给 c.defaultOrdererConfig c.defaultPeerConfig c.defaultChannelPolicies
 	err = c.loadDefaultConfigItems(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to network config")
 	}
 
 	//load network config
+	// 赋值给 c.networkConfig
 	err = c.loadNetworkConfig(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to network config")
 	}
 
 	//load peer configs by org dictionary
+	// 赋值给 c.peerConfigsByOrg
 	c.loadPeerConfigsByOrg()
 
 	//load network peers
+	// 赋值给 c.networkPeers
 	c.loadNetworkPeers()
 
 	//load orderer configs
+	// 赋值给 c.ordererConfigs
 	err = c.loadOrdererConfigs()
 	if err != nil {
 		return errors.WithMessage(err, "failed to load orderer configs")
 	}
 
 	//load channel peers
+	// 赋值给 c.channelPeersByChannel
 	err = c.loadChannelPeers()
 	if err != nil {
 		return errors.WithMessage(err, "failed to load channel peers")
 	}
 
 	//load channel orderers
+	// 赋值给 c.channelOrderersByChannel
 	err = c.loadChannelOrderers()
 	if err != nil {
 		return errors.WithMessage(err, "failed to load channel orderers")
 	}
 
 	//load tls cert pool
+	// 将 peer 和 orderer 节点的 tls ca 证书放到 cert pool 中
+	// 赋值给 c.tlsCertPool
 	err = c.loadTLSCertPool()
 	if err != nil {
 		return errors.WithMessage(err, "failed to load TLS cert pool")
 	}
-
+	// 删除 default channel
 	c.loadDefaultChannel()
 
 	return nil
@@ -517,18 +528,21 @@ func (c *EndpointConfig) loadDefaultChannel() {
 
 func (c *EndpointConfig) loadDefaultConfigItems(configEntity *endpointConfigEntity) error {
 	//default orderer config
+	// 赋值给 c.defaultOrdererConfig
 	err := c.loadDefaultOrderer(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load default orderer")
 	}
 
 	//default peer config
+	// 赋值给 c.defaultPeerConfig
 	err = c.loadDefaultPeer(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load default peer")
 	}
 
 	//default channel policies
+	// 赋值给 c.defaultChannelPolicies
 	c.loadDefaultChannelPolicies(configEntity)
 	return nil
 }
@@ -560,7 +574,8 @@ func (c *EndpointConfig) loadNetworkConfig(configEntity *endpointConfigEntity) e
 	//Organizations
 	networkConfig.Organizations = make(map[string]fab.OrganizationConfig)
 	for orgName, orgConfig := range configEntity.Organizations {
-
+		
+		// 加载当前组织下的 用户的 tls 证书
 		tlsKeyCertPairs := make(map[string]fab.CertKeyPair)
 		for user, tlsKeyPair := range orgConfig.Users {
 			tlsKeyCertPairs[user] = fab.CertKeyPair{
@@ -1108,12 +1123,14 @@ func (c *EndpointConfig) loadDefaultPeer(configEntity *endpointConfigEntity) err
 //loadAllTLSConfig pre-loads all network TLS Configs
 func (c *EndpointConfig) loadAllTLSConfig(configEntity *endpointConfigEntity) error {
 	//resolve path and load bytes
+	// 验证客户端的 tls 证书
 	err := c.loadClientTLSConfig(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load client TLSConfig ")
 	}
 
 	//resolve path and load bytes
+	// 获取当前组织下的用户的 tls 证书
 	err = c.loadOrgTLSConfig(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load org TLSConfig ")
@@ -1127,6 +1144,7 @@ func (c *EndpointConfig) loadAllTLSConfig(configEntity *endpointConfigEntity) er
 	}
 
 	//preload TLS client certs
+	// 加载 client  的 tls 证书和私钥
 	err = c.loadTLSClientCerts(configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load TLS client certs ")
@@ -1223,6 +1241,7 @@ func (c *EndpointConfig) loadPeerConfigsByOrg() {
 		peers := []fab.PeerConfig{}
 
 		for _, peerName := range orgPeers {
+			// 与 network 下的peer 相比较
 			p, ok := c.tryMatchingPeerConfig(peerName, false)
 			if !ok {
 				continue
@@ -1376,6 +1395,7 @@ func (c *EndpointConfig) loadTLSClientCerts(configEntity *endpointConfigEntity) 
 	}
 
 	// Load private key from cert using default crypto suite
+	// 获取 bccsp 实例
 	cs := cryptosuite.GetDefault()
 	pk, err := cryptoutil.GetPrivateKeyFromCert(cb, cs)
 
