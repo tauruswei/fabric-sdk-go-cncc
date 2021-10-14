@@ -259,6 +259,7 @@ func initSDK(sdk *FabricSDK, configProvider core.ConfigProvider, opts []Option) 
 	}
 
 	// Initialize Signing Manager
+	// 构建用来签名的 SigningManager
 	signingManager, err := sdk.opts.Core.CreateSigningManager(sdk.cryptoSuite)
 	if err != nil {
 		return errors.WithMessage(err, "failed to create signing manager")
@@ -271,12 +272,14 @@ func initSDK(sdk *FabricSDK, configProvider core.ConfigProvider, opts []Option) 
 	}
 
 	// Initialize Fabric provider
+	//  GRPC connection 缓存
 	infraProvider, err := sdk.opts.Core.CreateInfraProvider(cfg.endpointConfig)
 	if err != nil {
 		return errors.WithMessage(err, "failed to create infra provider")
 	}
 
 	// Initialize local discovery provider
+	
 	localDiscoveryProvider, err := sdk.opts.Service.CreateLocalDiscoveryProvider(cfg.endpointConfig)
 	if err != nil {
 		return errors.WithMessage(err, "failed to create local discovery provider")
@@ -286,7 +289,7 @@ func initSDK(sdk *FabricSDK, configProvider core.ConfigProvider, opts []Option) 
 	if err != nil {
 		return errors.WithMessage(err, "failed to create channel provider")
 	}
-
+	// 暂时未用到
 	sdk.initMetrics(cfg)
 
 	//update sdk providers list since all required providers are initialized
@@ -444,18 +447,21 @@ func (sdk *FabricSDK) loadConfigs(configProvider core.ConfigProvider) (*configs,
 	}
 
 	// load endpoint config
+	// 非常重要
 	c.endpointConfig, err = sdk.loadEndpointConfig(configBackend...)
 	if err != nil {
 		return nil, errors.WithMessage(err, "unable to load endpoint config")
 	}
 
 	// load identity config
+	// 基本没用
 	c.identityConfig, err = sdk.loadIdentityConfig(configBackend...)
 	if err != nil {
 		return nil, errors.WithMessage(err, "unable to load identity config")
 	}
 
 	// load metrics config
+	// 基本能没用
 	c.metricsConfig, err = sdk.loadMetricsConfig(configBackend...)
 	if err != nil {
 		return nil, errors.WithMessage(err, "unable to load metrics config")

@@ -195,21 +195,22 @@ func (c *IdentityConfig) loadIdentityConfigEntities() error {
 	}
 
 	//compile CA matchers
+	// 加载过滤器
 	err = c.compileMatchers()
 	if err != nil {
 		return errors.WithMessage(err, "failed to compile certificate authority matchers")
 	}
-
+	// 加载 client 配置
 	err = c.loadClientTLSConfig(&configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load client TLSConfig ")
 	}
-
+	// 加载 fabric ca 的 tls 配置
 	err = c.loadCATLSConfig(&configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load CA TLSConfig ")
 	}
-
+	// 根据 组织配置的 ca 信息 构建fabric-ca对象
 	err = c.loadAllCAConfigs(&configEntity)
 	if err != nil {
 		return errors.WithMessage(err, "failed to load all CA configs ")
